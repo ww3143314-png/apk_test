@@ -5,7 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch: # 支持在 GitHub 网页上一键手动点击触发构建
+  workflow_dispatch:
 
 jobs:
   build-apk:
@@ -19,12 +19,11 @@ jobs:
       - name: 配置 Node.js 运行环境
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
-      - name: 安装项目依赖并编译前端资源
+      - name: 安装依赖并构建前端产物
         run: |
-          npm ci || npm install
+          npm install
           npm run build
 
       - name: 配置 Java JDK 21 环境
@@ -33,23 +32,20 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 配置 Android SDK 环境
-        uses: android-actions/setup-android@v3
-
       - name: 同步前端产物至 Android 容器
         run: |
           npx cap sync android
 
-      - name: 赋予 Gradle 执行权限并编译生成 APK
+      - name: 执行 Gradle 编译生成 APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --no-daemon
 
-      - name: 归档并发布 APK 安装包产物
+      - name: 上传 SparkCapsule APK 安装包
         uses: actions/upload-artifact@v4
         with:
-          name: SparkCapsule-v1.0-Debug.apk
+          name: SparkCapsule-v1.0-Debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
