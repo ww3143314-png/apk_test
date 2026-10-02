@@ -1,0 +1,315 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   SparkCapsule · 灵感智囊 - 核心样式与设计系统 (Dark Glassmorphism)
+   ========================================================================== */
+
+:root {
+  --font-main: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* 品牌色彩系统 */
+  --bg-dark: #090d16;
+  --bg-card: rgba(22, 28, 45, 0.75);
+  --bg-card-hover: rgba(30, 41, 65, 0.85);
+  --bg-input: rgba(15, 23, 42, 0.65);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(245, 158, 11, 0.35);
+  
+  --primary-amber: #f59e0b;
+  --primary-amber-glow: rgba(245, 158, 11, 0.25);
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-purple: #8b5cf6;
+  
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  
+  /* 移动端物理尺寸 */
+  --mobile-width: 412px;
+  --mobile-height: 870px;
+  --tabbar-height: 72px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+input, textarea {
+  user-select: text;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: #030712;
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 隐藏滚动条但保留平滑滚动 */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 桌面端的手机外壳模拟器框架 */
+.desktop-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #090d16 60%, #020617 100%);
+}
+
+.simulator-toolbar {
+  position: absolute;
+  top: 16px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 6px 16px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.simulator-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.simulator-btn:hover, .simulator-btn.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.simulator-badge {
+  background: #f59e0b;
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+/* 手机壳模型容器 */
+.phone-case {
+  position: relative;
+  width: var(--mobile-width);
+  height: var(--mobile-height);
+  background: #000;
+  border-radius: 50px;
+  box-shadow: 0 0 0 12px #1e293b, 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 40px rgba(245, 158, 11, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 宽屏全屏模式 */
+.phone-case.expanded-mode {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 手机灵动岛 / 前置刘海摄像头 */
+.phone-notch {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 26px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.notch-camera {
+  width: 10px;
+  height: 10px;
+  background: #1e293b;
+  border-radius: 50%;
+  border: 2px solid #0f172a;
+}
+.notch-sensor {
+  width: 6px;
+  height: 6px;
+  background: #0f172a;
+  border-radius: 50%;
+}
+
+/* 手机屏幕视口 */
+.app-viewport {
+  width: 100%;
+  height: 100%;
+  background: #090d16;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 顶部状态栏 */
+.status-bar {
+  height: 44px;
+  padding: 10px 24px 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  z-index: 80;
+}
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 中间主内容滚动区 */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 18px calc(var(--tabbar-height) + 16px) 18px;
+  position: relative;
+}
+
+/* 底部毛玻璃导航栏 (TabBar) */
+.tabbar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--tabbar-height);
+  background: rgba(11, 15, 25, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 10px 8px 10px;
+  z-index: 80;
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 14px;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.tab-item.active {
+  color: var(--primary-amber);
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 3px;
+  background: var(--primary-amber);
+  border-radius: 3px;
+  box-shadow: 0 0 10px var(--primary-amber);
+}
+
+.tab-icon-wrapper {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tab-item.active .tab-icon-wrapper {
+  transform: translateY(-2px) scale(1.1);
+}
+
+/* 通用毛玻璃卡片 */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  transition: all 0.25s ease;
+}
+
+.glass-card:active {
+  transform: scale(0.985);
+}
+
+/* 按钮微动效 */
+.touch-btn {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.touch-btn:active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+/* 打字机光标动画 */
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  background: var(--primary-amber);
+  margin-left: 4px;
+  vertical-align: middle;
+  border-radius: 2px;
+  animation: blinkCursor 0.8s infinite;
+}

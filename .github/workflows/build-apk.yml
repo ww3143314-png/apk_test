@@ -1,0 +1,55 @@
+name: 编译生成 SparkCapsule Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # 支持在 GitHub 网页上一键手动点击触发构建
+
+jobs:
+  build-apk:
+    name: 自动化打包 Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出项目源代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js 运行环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 安装项目依赖并编译前端资源
+        run: |
+          npm ci || npm install
+          npm run build
+
+      - name: 配置 Java JDK 21 环境
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: 配置 Android SDK 环境
+        uses: android-actions/setup-android@v3
+
+      - name: 同步前端产物至 Android 容器
+        run: |
+          npx cap sync android
+
+      - name: 赋予 Gradle 执行权限并编译生成 APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
+
+      - name: 归档并发布 APK 安装包产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: SparkCapsule-v1.0-Debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
